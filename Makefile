@@ -41,7 +41,7 @@ rm: stop ## stop and remove services
 	docker-compose rm 
 
 set-permissions: ## fix files permission on /opt/otrs
-	docker-compose exec web sudo bin/otrs.SetPermissions.pl --web-group=www-data
+	docker-compose exec web sudo otrs.SetPermissions.pl --web-group=www-data
 
 upgrade: ## download new image version and reconstruct services
 	docker-compose pull && docker-compose stop && docker-compose create && docker-compose start
@@ -55,28 +55,28 @@ restore: ## restore backup from BACKUP_DATE param format like YYYY-MM-DD_HH-mm
 
 cron-enable-backup: ## activate daily backup with crontab
 	docker-compose exec web test -f /opt/otrs/var/cron/app-backups.dist
-	docker-compose exec web bin/Cron.sh stop otrs
+	docker-compose exec web Cron.sh stop otrs
 	docker-compose exec web mv var/cron/app-backups.dist var/cron/app-backups
-	docker-compose exec web bin/Cron.sh start otrs
+	docker-compose exec web Cron.sh start otrs
 	docker-compose exec web chown otrs /app-backups
 
 cron-disable-backup: ## deactivate daily backup with crontab
 	docker-compose exec web test -f /opt/otrs/var/cron/app-backups
-	docker-compose exec web bin/Cron.sh stop otrs
+	docker-compose exec web Cron.sh stop otrs
 	docker-compose exec web mv var/cron/app-backups var/cron/app-backups.dist
-	docker-compose exec web bin/Cron.sh start otrs
+	docker-compose exec web Cron.sh start otrs
 
 elasticsearch-mapping: ## run MappingInstall command
-	docker-compose exec -u otrs web bin/otrs.Console.pl Admin::Ligero::Elasticsearch::MappingInstall --DefaultLanguage
+	docker-compose exec -u otrs web otrs.Console.pl Admin::Ligero::Elasticsearch::MappingInstall --DefaultLanguage
 
 elasticsearch-ticket-reindex: ## force reindex tickets 
-	docker-compose exec -u otrs web bin/otrs.Console.pl Maint::Ligero::Elasticsearch::TicketIndexRebuild --micro-sleep 50000
+	docker-compose exec -u otrs web otrs.Console.pl Maint::Ligero::Elasticsearch::TicketIndexRebuild --micro-sleep 50000
 
 elasticsearch-portalfaq-reindex: ## force reindex Portal FAQ 
-	docker-compose exec -u otrs web bin/otrs.Console.pl Maint::Ligero::Elasticsearch::PortalFaqIndexRebuild --DefaultLanguage
+	docker-compose exec -u otrs web otrs.Console.pl Maint::Ligero::Elasticsearch::PortalFaqIndexRebuild --DefaultLanguage
 
 elasticsearch-portalservice-reindex: ## force reindex Portal Service 
-	docker-compose exec -u otrs web bin/otrs.Console.pl Maint::Ligero::Elasticsearch::PortalServiceIndexRebuild --DefaultLanguage
+	docker-compose exec -u otrs web otrs.Console.pl Maint::Ligero::Elasticsearch::PortalServiceIndexRebuild --DefaultLanguage
 
 elasticsearch-all-reindex: elasticsearch-ticket-reindex elasticsearch-portalfaq-reindex elasticsearch-portalservice-reindex ## Rebuild all on elasticsearch
 
@@ -89,10 +89,10 @@ tail-error-log: ## show apache error log
 	docker-compose logs web 
 
 daemon-stop: ## stop Daemon
-	docker-compose exec -u otrs web bin/otrs.Daemon.pl stop
+	docker-compose exec -u otrs web otrs.Daemon.pl stop
 
 daemon-start: ## start Daemon
-	docker-compose exec -u otrs web bin/otrs.Daemon.pl start
+	docker-compose exec -u otrs web otrs.Daemon.pl start
 
 daemon-restart: daemon-stop daemon-start ## restart Daemon
 
