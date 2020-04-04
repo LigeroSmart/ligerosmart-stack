@@ -23,7 +23,7 @@ Você pode usar ainda outros parâmetros. Consulte o comando `make help`
 
 # Primeiro acesso
 
-O ambiente será configurado e funcionará na porta 80
+O ambiente será configurado e funcionará na porta 8008
 * Endereço: http://localhost:8008/otrs/index.pl
 * Usuário: root@localhost
 * Senha: ligero
