@@ -26,6 +26,7 @@ services:
       #ROOT_PASSWORD: ligero
     ports:
       - "8008:80"
+      #- "2202:22"
 
   database:
     image: mysql:5.7
