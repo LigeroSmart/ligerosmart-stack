@@ -85,7 +85,7 @@ elasticsearch-sysctl-config: ## configure server to run elasticsearch service
 	echo 'sysctl -w vm.max_map_count=262144' > /etc/sysctl.d/elasticsearch.conf
 
 	
-tail-error-log: ## show apache error log
+tail-web-log: ## show web service log
 	docker-compose logs -f web 
 
 daemon-stop: ## stop Daemon
