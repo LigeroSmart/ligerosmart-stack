@@ -1,6 +1,6 @@
 # LigeroSmart Stack
 
-Configuração básica do Ligero a partir da imagem com código do OTRS
+Configuração básica para instanciar containers do LigeroSmart
 
 # Pré-requisitos
 
