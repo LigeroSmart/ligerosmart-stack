@@ -41,7 +41,7 @@ rm: stop ## stop and remove services
 	docker-compose rm 
 
 set-permissions: ## fix files permission on /opt/otrs
-	docker-compose exec web sudo otrs.SetPermissions.pl --web-group=www-data
+	docker-compose exec web otrs.SetPermissions.pl --web-group=www-data
 
 upgrade: ## download new image version and reconstruct services
 	docker-compose pull && docker-compose stop && docker-compose create && docker-compose start
