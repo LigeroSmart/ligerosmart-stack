@@ -10,7 +10,6 @@ Configuração básica do Ligero a partir da imagem com código do OTRS
 
 # Comandos para iniciar uma instância nova
 ```
-docker-compose pull
 docker-compose up
 ```
 
