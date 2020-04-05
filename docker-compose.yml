@@ -23,6 +23,7 @@ services:
       #START_SSHD: 0
       #SSH_PASSWORD: 
       #DEBUG_MODE: 0
+      #ROOT_PASSWORD: ligero
     ports:
       - "8008:80"
 
