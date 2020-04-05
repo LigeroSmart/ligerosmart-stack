@@ -86,7 +86,7 @@ elasticsearch-sysctl-config: ## configure server to run elasticsearch service
 
 	
 tail-error-log: ## show apache error log
-	docker-compose logs web 
+	docker-compose logs -f web 
 
 daemon-stop: ## stop Daemon
 	docker-compose exec -u otrs web otrs.Daemon.pl stop
