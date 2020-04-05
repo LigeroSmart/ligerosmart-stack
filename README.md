@@ -1,6 +1,6 @@
 # LigeroSmart Stack
 
-Configuração básica para instanciar containers do LigeroSmart
+Configuração básica para instanciar serviços do LigeroSmart
 
 # Pré-requisitos
 
