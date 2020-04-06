@@ -12,6 +12,7 @@ Configuração básica para instanciar serviços do LigeroSmart
 ```
 docker-compose up
 ```
+Lembrando que este comando deve ser sempre rodado no diretório onde se encontra o arquivo docker-compose.yml
 
 ## Usando make
 ```
