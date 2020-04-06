@@ -24,6 +24,10 @@ Você pode usar ainda outros parâmetros. Consulte o comando `make help`
 # Primeiro acesso
 
 O ambiente será configurado e funcionará na porta 8008
+
+Na primeira execução o sistema é configurado para você. Aguarde até que todas as configurações sejam aplicadas.
+A tela de login será carregada automaticamente ao final da configuração.
+
 * Endereço: http://localhost:8008/otrs/index.pl
 * Usuário: root@localhost
 * Senha: ligero
@@ -32,4 +36,3 @@ Informações de acesso do Grafana:
 * Endereço: http://localhost:3000
 * Usuário: admin
 * Senha: complemento
-
