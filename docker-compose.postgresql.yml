@@ -6,7 +6,6 @@ services:
     volumes:
       - ligerosmart-data:/opt/otrs
       - ./app-backups:/app-backups
-      - ./app-init.sh:/app-init.sh
     restart: unless-stopped
     environment:
       APP_FQDN: localhost.localdomain
