@@ -12,8 +12,8 @@ services:
       APP_DatabaseType: postgresql
       APP_DatabaseHost: database
       APP_Database: ligerosmart
-      APP_DatabaseUser: ligerosmart
-      APP_DatabasePw: ligerosmart
+      APP_DatabaseUser: postgres
+      APP_DatabasePw: postgres
       APP_NodeID: 1
       APP_LigeroSmart_Node: elasticsearch
       APP_CustomerID: ligerosmart
@@ -36,8 +36,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: ligerosmart
-      POSTGRES_PASSWORD: ligerosmart
-      POSTGRES_USER: ligerosmart
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
 
   elasticsearch:
     image: ligero/elasticsearch:6.5.1
