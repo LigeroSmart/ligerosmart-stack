@@ -17,7 +17,7 @@ services:
       #- --entryPoints=Name:https Address::443 TLS:/certs/host.crt,/certs/host.key
       - --acme
       - --acme.email=${ACME_EMAIL}
-      - --acme.storage=/certs/acme.json
+      - --acme.storage=/acme.json
       - --acme.entryPoint=https
       - --acme.onHostRule=true
       - --acme.httpchallenge.entrypoint=http
