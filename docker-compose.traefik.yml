@@ -14,13 +14,15 @@ services:
       - --defaultentrypoints=https,http
       - --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
       - --entryPoints=Name:https Address::443 TLS
-      #- --entryPoints=Name:https Address::443 TLS:/certs/host.crt,/certs/host.key
+      # Letsencrypt cert
       - --acme
       - --acme.email=${ACME_EMAIL}
       - --acme.storage=/acme.json
       - --acme.entryPoint=https
       - --acme.onHostRule=true
       - --acme.httpchallenge.entrypoint=http
+      # other cert
+      #- --entryPoints=Name:https Address::443 TLS:/certs/host.crt,/certs/host.key
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
