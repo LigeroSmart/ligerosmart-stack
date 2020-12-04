@@ -1,0 +1,113 @@
+version: '2'
+
+services:
+
+  router:
+    image: traefik:v1.7
+    command: 
+      - --api 
+      - --docker
+      - --docker.watch=true 
+      - --docker.exposedbydefault=false
+      - --debug=false
+      - --logLevel=WARN
+      - --defaultentrypoints=https,http
+      - --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
+      - --entryPoints=Name:https Address::443 TLS
+      #- --entryPoints=Name:https Address::443 TLS:/certs/host.crt,/certs/host.key
+      #- --acme
+      #- --acme.email=${ACME_EMAIL}
+      #- --acme.storage=/certs/acme.json
+      #- --acme.entryPoint=https
+      #- --acme.onHostRule=true
+      #- --acme.httpchallenge.entrypoint=http
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 80:80
+      - 443:443
+
+  web:
+    image: ligero/ligerosmart-ce
+    volumes:
+      - ligerosmart-data:/opt/otrs
+      - ./app-backups:/app-backups
+    restart: unless-stopped
+    environment:
+      APP_FQDN: localhost.localdomain
+      APP_DatabaseType: mysql
+      APP_DatabaseHost: database
+      APP_Database: ligerosmart
+      APP_DatabaseUser: ligerosmart
+      APP_DatabasePw: ligerosmart
+      APP_NodeID: 1
+      APP_LigeroSmart_Node: elasticsearch
+      APP_CustomerID: ligerosmart
+      APP_DefaultLanguage: pt_BR
+      TZ: America/Sao_Paulo
+      #START_FRONTEND: 1
+      #START_BACKEND: 1
+      #START_SSHD: 0
+      #SSH_PASSWORD: 
+      #DEBUG_MODE: 0
+      #ROOT_PASSWORD: ligero
+    labels:
+      - traefik.enable=true
+      - traefik.port=80
+      - traefik.default.frontend.rule=Host:${WEBSERVER_FQDN}
+      - traefik.otrs-path.frontend.rule=PathPrefix:/otrs
+      - traefik.protocol=http
+
+  database:
+    image: mysql:5.7
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ligerosmart
+      MYSQL_DATABASE: ligerosmart
+      MYSQL_USER: ligerosmart
+      MYSQL_PASSWORD: ligerosmart
+    command:
+      - --max-allowed-packet=64M
+      - --innodb-buffer-pool-size=1G
+      - --innodb-log-file-size=256M
+      - --character-set-server=utf8
+      - --bind-address=0.0.0.0
+
+  elasticsearch:
+    image: ligero/elasticsearch:6.5.1
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    restart: unless-stopped
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    environment:
+      - cluster.name=otrs-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+
+  grafana:
+    image: ligero/grafana
+    restart: unless-stopped
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SERVER_ROOT_URL=https://${WEBSERVER_FQDN}/grafana/
+    labels:
+      - traefik.enable=true
+      - traefik.port=3000
+      - traefik.frontend.rule=PathPrefixStrip:/grafana
+      - traefik.protocol=http
+        
+volumes:
+  ligerosmart-data:
+    driver: local
+  mysql-data:
+    driver: local
+  elasticsearch-data:
+    driver: local
+  grafana-data:
+    driver: local
