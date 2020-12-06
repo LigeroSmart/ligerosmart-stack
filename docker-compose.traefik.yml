@@ -5,7 +5,7 @@ services:
   router:
     image: traefik:v1.7
     command: 
-      - --api 
+      - --api
       - --docker
       - --docker.watch=true 
       - --docker.exposedbydefault=false
@@ -90,6 +90,12 @@ services:
       - cluster.name=otrs-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    labels:
+      - traefik.enable=true
+      - traefik.port=9200
+      - traefik.es-path.frontend.rule=PathPrefixStrip:/elasticsearch
+      - traefik.es-path.frontend.auth.basic.users=admin:$$apr1$$7084whge$$kQU3F5SrBABKENsd8BFk21 # ligero
+      - traefik.protocol=http
 
   grafana:
     image: ligero/grafana
