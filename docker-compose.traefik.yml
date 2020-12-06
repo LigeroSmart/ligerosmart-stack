@@ -110,6 +110,7 @@ services:
       - grafana-data:/var/lib/grafana
     environment:
       - GF_SERVER_ROOT_URL=/grafana/
+      - GF_AUTH_BASIC_ENABLED=false # avoid elasticsearch auth
     labels:
       - traefik.enable=true
       - traefik.port=3000
