@@ -61,6 +61,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.port=80
+      - traefik.fqdn.frontend.rule=Host:${WEBSERVER_FQDN}
       - traefik.default-path.frontend.rule=PathPrefix:/
       - traefik.otrs-path.frontend.rule=PathPrefix:/otrs
       - traefik.protocol=http
