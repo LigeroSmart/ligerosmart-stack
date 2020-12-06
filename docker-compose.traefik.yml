@@ -103,7 +103,7 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
     environment:
-      - GF_SERVER_ROOT_URL=https://${WEBSERVER_FQDN}/grafana/
+      - GF_SERVER_ROOT_URL=/grafana/
     labels:
       - traefik.enable=true
       - traefik.port=3000
