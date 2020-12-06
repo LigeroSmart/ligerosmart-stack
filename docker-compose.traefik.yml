@@ -5,7 +5,7 @@ services:
   router:
     image: traefik:v1.7
     command: 
-      - --api
+      # - --api
       - --docker
       - --docker.watch=true 
       - --docker.exposedbydefault=false
