@@ -28,7 +28,12 @@ services:
     ports:
       - 80:80
       - 443:443
-
+    # labels:
+      # - traefik.enable=true
+      # - traefik.port=8080
+      # - traefik.traefik-dashboard-path.frontend.rule=PathPrefix:/dashboard
+      # - traefik.traefik-api-path.frontend.rule=PathPrefix:/api
+      # - traefik.protocol=http
   web:
     image: ligero/ligerosmart-ce
     volumes:
