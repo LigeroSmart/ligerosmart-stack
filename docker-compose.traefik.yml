@@ -56,7 +56,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.port=80
-      - traefik.default.frontend.rule=Host:${WEBSERVER_FQDN}
+      - traefik.default-path.frontend.rule=PathPrefix:/
       - traefik.otrs-path.frontend.rule=PathPrefix:/otrs
       - traefik.protocol=http
 
@@ -101,7 +101,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.port=3000
-      - traefik.frontend.rule=PathPrefixStrip:/grafana
+      - traefik.grafana-path.frontend.rule=PathPrefixStrip:/grafana
       - traefik.protocol=http
         
 volumes:
