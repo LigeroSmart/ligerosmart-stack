@@ -35,6 +35,6 @@ A tela de login será carregada automaticamente ao final da configuração.
 Informações de acesso do Grafana:
 * Endereço: http://localhost:3000
 * Usuário: admin
-* Senha: complemento
+* Senha: ligero
 
 Caso queira acessar remotamente, troque o endereço localhost pelo IP do seu servidor
