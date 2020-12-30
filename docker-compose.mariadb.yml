@@ -32,7 +32,7 @@ services:
   database:
     image: mariadb:10.5.8
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mariadb-data:/var/lib/mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ligerosmart
@@ -72,7 +72,7 @@ services:
 volumes:
   ligerosmart-data:
     driver: local
-  mysql-data:
+  mariadb-data:
     driver: local
   elasticsearch-data:
     driver: local
