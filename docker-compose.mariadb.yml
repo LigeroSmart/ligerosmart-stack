@@ -1,34 +1,6 @@
 version: '2'
 
 services:
-
-  router:
-    image: traefik:v1.7
-    command: 
-      # - --api
-      - --docker
-      - --docker.watch=true 
-      - --docker.exposedbydefault=false
-      - --debug=false
-      - --logLevel=WARN
-      - --defaultentrypoints=https,http
-      - --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
-      - --entryPoints=Name:https Address::443 TLS
-      # Letsencrypt cert
-      - --acme
-      - --acme.email=${ACME_EMAIL}
-      - --acme.storage=/acme.json
-      - --acme.entryPoint=https
-      - --acme.onHostRule=true
-      - --acme.httpchallenge.entrypoint=http
-      # other cert
-      #- --entryPoints=Name:https Address::443 TLS:/certs/host.crt,/certs/host.key
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 80:80
-      - 443:443 
-      
   web:
     image: ligero/ligerosmart-ce
     volumes:
@@ -53,16 +25,12 @@ services:
       #SSH_PASSWORD: 
       #DEBUG_MODE: 0
       #ROOT_PASSWORD: ligero
-    labels:
-      - traefik.enable=true
-      - traefik.port=80
-      - traefik.fqdn.frontend.rule=Host:${WEBSERVER_FQDN}
-      - traefik.default-path.frontend.rule=PathPrefix:/
-      - traefik.otrs-path.frontend.rule=PathPrefix:/otrs
-      - traefik.protocol=http
+    ports:
+      - "8008:80"
+      #- "2202:22"
 
   database:
-    image: mysql:5.7
+    image: mariadb:10.5.8
     volumes:
       - mysql-data:/var/lib/mysql
     restart: unless-stopped
@@ -76,6 +44,7 @@ services:
       - --innodb-buffer-pool-size=1G
       - --innodb-log-file-size=256M
       - --character-set-server=utf8
+      - --collation-server=utf8_general_ci
       - --bind-address=0.0.0.0
 
   elasticsearch:
@@ -91,26 +60,14 @@ services:
       - cluster.name=otrs-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    labels:
-      - traefik.enable=true
-      - traefik.port=9200
-      - traefik.es-path.frontend.rule=PathPrefixStrip:/elasticsearch
-      - traefik.es-path.frontend.auth.basic.users=admin:$$apr1$$7084whge$$kQU3F5SrBABKENsd8BFk21 # ligero
-      - traefik.protocol=http
 
   grafana:
     image: ligero/grafana
     restart: unless-stopped
     volumes:
       - grafana-data:/var/lib/grafana
-    environment:
-      - GF_SERVER_ROOT_URL=/grafana/
-      - GF_AUTH_BASIC_ENABLED=false # avoid elasticsearch auth
-    labels:
-      - traefik.enable=true
-      - traefik.port=3000
-      - traefik.grafana-path.frontend.rule=PathPrefixStrip:/grafana
-      - traefik.protocol=http
+    ports:
+      - 3000:3000
         
 volumes:
   ligerosmart-data:
@@ -121,3 +78,4 @@ volumes:
     driver: local
   grafana-data:
     driver: local
+
