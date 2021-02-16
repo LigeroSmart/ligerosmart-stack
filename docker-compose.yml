@@ -6,7 +6,7 @@ services:
     volumes:
       - ligerosmart-data:/opt/otrs
       - ./app-backups:/app-backups
-    restart: unless-stopped
+    restart: always
     environment:
       APP_FQDN: localhost.localdomain
       APP_DatabaseType: mysql
@@ -33,7 +33,7 @@ services:
     image: mysql:5.7
     volumes:
       - mysql-data:/var/lib/mysql
-    restart: unless-stopped
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ligerosmart
       MYSQL_DATABASE: ligerosmart
@@ -50,7 +50,7 @@ services:
     image: ligero/elasticsearch:6.5.1
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
-    restart: unless-stopped
+    restart: always
     ulimits:
       memlock:
         soft: -1
@@ -62,7 +62,7 @@ services:
 
   grafana:
     image: ligero/grafana
-    restart: unless-stopped
+    restart: always
     volumes:
       - grafana-data:/var/lib/grafana
     ports:
