@@ -9,11 +9,11 @@ services:
     restart: always
     environment:
       APP_FQDN: localhost.localdomain
-      APP_DatabaseType: mysql
+      APP_DatabaseType: postgresql
       APP_DatabaseHost: database
       APP_Database: ligerosmart
-      APP_DatabaseUser: ligerosmart
-      APP_DatabasePw: ligerosmart
+      APP_DatabaseUser: postgres
+      APP_DatabasePw: postgres
       APP_NodeID: 1
       APP_LigeroSmart_Node: elasticsearch
       APP_CustomerID: ligerosmart
@@ -30,21 +30,14 @@ services:
       #- "2202:22"
 
   database:
-    image: mysql:5.7.29
+    image: postgres:9.5
     volumes:
-      - mysql-data:/var/lib/mysql
-    restart: always
+      - postgres-data:/var/lib/postgresql
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ligerosmart
-      MYSQL_DATABASE: ligerosmart
-      MYSQL_USER: ligerosmart
-      MYSQL_PASSWORD: ligerosmart
-    command:
-      - --max-allowed-packet=64M
-      - --innodb-buffer-pool-size=1G
-      - --innodb-log-file-size=256M
-      - --character-set-server=utf8
-      - --bind-address=0.0.0.0
+      POSTGRES_DB: ligerosmart
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
 
   elasticsearch:
     image: ligero/elasticsearch:6.5.1
@@ -71,7 +64,7 @@ services:
 volumes:
   ligerosmart-data:
     driver: local
-  mysql-data:
+  postgres-data:
     driver: local
   elasticsearch-data:
     driver: local
