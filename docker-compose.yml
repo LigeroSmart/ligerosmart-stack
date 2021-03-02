@@ -2,10 +2,11 @@ version: '2'
 
 services:
   web:
-    image: ligero/ligerosmart-ce
+    image: ligero/ligerosmart:nginx-dev
     volumes:
       - ligerosmart-data:/opt/otrs
       - ./app-backups:/app-backups
+      - ./code:/opt/otrs
     restart: always
     environment:
       APP_FQDN: localhost.localdomain
@@ -19,11 +20,11 @@ services:
       APP_CustomerID: ligerosmart
       APP_DefaultLanguage: pt_BR
       TZ: America/Sao_Paulo
-      #START_FRONTEND: 1
-      #START_BACKEND: 1
+      #START_SCHEDULER: 1
+      #START_WEBSERVER: 1
       #START_SSHD: 0
       #SSH_PASSWORD: 
-      #DEBUG_MODE: 0
+      DEBUG_MODE: 1
       #ROOT_PASSWORD: ligero
     ports:
       - "8008:80"
@@ -77,4 +78,3 @@ volumes:
     driver: local
   grafana-data:
     driver: local
-
