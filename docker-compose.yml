@@ -30,9 +30,9 @@ services:
       #- "2202:22"
 
   database:
-    image: mysql:5.7.29
+    image: mariadb:10.5.8
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mariadb-data:/var/lib/mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ligerosmart
@@ -44,6 +44,7 @@ services:
       - --innodb-buffer-pool-size=1G
       - --innodb-log-file-size=256M
       - --character-set-server=utf8
+      - --collation-server=utf8_general_ci
       - --bind-address=0.0.0.0
 
   elasticsearch:
@@ -71,7 +72,7 @@ services:
 volumes:
   ligerosmart-data:
     driver: local
-  mysql-data:
+  mariadb-data:
     driver: local
   elasticsearch-data:
     driver: local
