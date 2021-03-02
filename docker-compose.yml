@@ -4,7 +4,6 @@ services:
   web:
     image: ligero/ligerosmart:nginx-dev
     volumes:
-      - ligerosmart-data:/opt/otrs
       - ./app-backups:/app-backups
       - ./app:/opt/otrs
     restart: always
@@ -70,8 +69,6 @@ services:
       - 3000:3000
         
 volumes:
-  ligerosmart-data:
-    driver: local
   mysql-data:
     driver: local
   elasticsearch-data:
