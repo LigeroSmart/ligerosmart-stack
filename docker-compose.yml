@@ -6,7 +6,7 @@ services:
     volumes:
       - ligerosmart-data:/opt/otrs
       - ./app-backups:/app-backups
-      - ./code:/opt/otrs
+      - ./app:/opt/otrs
     restart: always
     environment:
       APP_FQDN: localhost.localdomain
