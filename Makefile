@@ -44,6 +44,7 @@ set-permissions: ## fix files permission on /opt/otrs
 	docker-compose exec web otrs.SetPermissions.pl --web-group=www-data
 
 upgrade: ## download new image version and reconstruct services
+	docker run --rm -v ligerosmart-stack_ligero-data:/opt/otrs-old ligero/ligerosmart-ce:latest rsync -av /opt/otrs/ /opt/otrs-old/
 	docker-compose pull && docker-compose stop && docker-compose create && docker-compose start
 
 backup: ## run backup.pl on the web service
