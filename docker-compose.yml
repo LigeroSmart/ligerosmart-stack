@@ -11,6 +11,7 @@ services:
       - --docker.exposedbydefault=false
       - --debug=false
       - --logLevel=WARN
+      ## HTTP only (remove line above if HTTPS is active)
       - --entryPoints=Name:http Address::80
       ## HTTPS
       #- --defaultentrypoints=https,http
@@ -23,8 +24,8 @@ services:
       #- --acme.entryPoint=https
       #- --acme.onHostRule=true
       #- --acme.httpchallenge.entrypoint=http
-      # other cert
-      #- --entryPoints=Name:https Address::443 TLS:/certificates/host.crt,/certificates/host.key
+      # other certificates
+      #- --entryPoints=Name:https Address::443 TLS:/certificates/www.mycert.com.crt,/certificates/www.mycert.com.key
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - certificates:/certificates/
