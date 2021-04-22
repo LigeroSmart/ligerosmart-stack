@@ -65,7 +65,7 @@ services:
       - traefik.default-path.frontend.rule=PathPrefix:/
       - traefik.otrs-path.frontend.rule=PathPrefix:/otrs
       - traefik.user-path.frontend.rule=Path:/atendente;ReplacePath:/otrs/index.pl
-      # set / path to customer 
+      # set root path to customer 
       #- traefik.customer-path.frontend.rule=Path:/;ReplacePath:/otrs/customer.pl
       - traefik.protocol=http
 
