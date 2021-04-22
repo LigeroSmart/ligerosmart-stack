@@ -2,7 +2,7 @@ version: '2'
 
 services:
   web:
-    image: ligero/ligerosmart-ce
+    image: ligero/ligerosmart:6.1-nginx
     volumes:
       - ligerosmart-data:/opt/otrs
       - ./app-backups:/app-backups
