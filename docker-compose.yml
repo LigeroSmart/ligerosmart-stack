@@ -11,6 +11,7 @@ services:
       - --docker.exposedbydefault=false
       - --debug=false
       - --logLevel=WARN
+      ## HTTP only (remove line above if HTTPS is active)
       - --entryPoints=Name:http Address::80
       ## HTTPS
       #- --defaultentrypoints=https,http
@@ -19,15 +20,15 @@ services:
       ## letsencrypt
       #- --acme
       #- --acme.email=${ACME_EMAIL}
-      #- --acme.storage=/certificates/acme.json
+      #- --acme.storage=/ssl/acme.json
       #- --acme.entryPoint=https
       #- --acme.onHostRule=true
       #- --acme.httpchallenge.entrypoint=http
-      # other cert
-      #- --entryPoints=Name:https Address::443 TLS:/certificates/host.crt,/certificates/host.key
+      # other ssl
+      #- --entryPoints=Name:https Address::443 TLS:/ssl/www.mycert.com.crt,/ssl/www.mycert.com.key
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - certificates:/certificates/
+      - ssl:/ssl/
     ports:
       - 80:80
       - 443:443 
@@ -64,7 +65,7 @@ services:
       - traefik.default-path.frontend.rule=PathPrefix:/
       - traefik.otrs-path.frontend.rule=PathPrefix:/otrs
       - traefik.user-path.frontend.rule=Path:/atendente;ReplacePath:/otrs/index.pl
-      # set / path to customer 
+      # set root path to customer 
       #- traefik.customer-path.frontend.rule=Path:/;ReplacePath:/otrs/customer.pl
       - traefik.protocol=http
 
@@ -132,6 +133,6 @@ volumes:
     driver: local
   grafana-data:
     driver: local
-  certificates:
+  ssl:
     driver: local
 
