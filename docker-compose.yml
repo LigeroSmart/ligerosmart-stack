@@ -20,15 +20,15 @@ services:
       ## letsencrypt
       #- --acme
       #- --acme.email=${ACME_EMAIL}
-      #- --acme.storage=/certificates/acme.json
+      #- --acme.storage=/ssl/acme.json
       #- --acme.entryPoint=https
       #- --acme.onHostRule=true
       #- --acme.httpchallenge.entrypoint=http
-      # other certificates
-      #- --entryPoints=Name:https Address::443 TLS:/certificates/www.mycert.com.crt,/certificates/www.mycert.com.key
+      # other ssl
+      #- --entryPoints=Name:https Address::443 TLS:/ssl/www.mycert.com.crt,/ssl/www.mycert.com.key
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - certificates:/certificates/
+      - ssl:/ssl/
     ports:
       - 80:80
       - 443:443 
@@ -133,6 +133,6 @@ volumes:
     driver: local
   grafana-data:
     driver: local
-  certificates:
+  ssl:
     driver: local
 
