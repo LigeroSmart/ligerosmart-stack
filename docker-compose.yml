@@ -28,6 +28,7 @@ services:
     ports:
       - "8008:80"
       #- "2202:22"
+      - "13603:13603"
 
   database:
     image: mysql:5.7
