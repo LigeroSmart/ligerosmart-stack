@@ -43,10 +43,13 @@ rm: stop ## stop and remove services
 set-permissions: ## fix files permission on /opt/otrs
 	docker-compose exec web otrs.SetPermissions.pl --web-group=www-data
 
-upgrade: ## download new image version and reconstruct services
-	docker pull ligero/ligerosmart:6.1-base
-	docker run --rm -v ligerosmart-stack_ligero-core:/opt/otrs-old ligero/ligerosmart:6.1-base rsync -av /opt/otrs/ /opt/otrs-old/
-	docker-compose pull && docker-compose stop && docker-compose create && docker-compose start
+upgrade-core: ## download new code version
+	docker-compose exec web git pull origin ${RELEASE_TAG:-6.1.1}
+
+upgrade-containers: ## download new image version and reconstruct services
+	docker-compose pull && docker-compose up -d
+
+upgrade-all: upgrade-core upgrade-containers ## download new image version and reconstruct services
 
 backup: ## run backup.pl on the web service
 	docker-compose exec web /opt/otrs/scripts/backup.pl -d /app-backups
