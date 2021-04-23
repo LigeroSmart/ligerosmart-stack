@@ -44,7 +44,7 @@ set-permissions: ## fix files permission on /opt/otrs
 	docker-compose exec web otrs.SetPermissions.pl --web-group=www-data
 
 upgrade-core: ## download new code version
-	docker-compose exec web git pull origin ${RELEASE_TAG:-6.1.1}
+	docker-compose exec web git pull origin ${version}
 
 upgrade-containers: ## download new image version and reconstruct services
 	docker-compose pull && docker-compose up -d
@@ -53,6 +53,9 @@ upgrade-all: upgrade-core upgrade-containers ## download new image version and r
 
 backup: ## run backup.pl on the web service
 	docker-compose exec web /opt/otrs/scripts/backup.pl -d /app-backups
+
+list-backups: ## run backup.pl on the web service
+	docker-compose exec web ls -1 /app-backups
 
 restore: ## restore backup from BACKUP_DATE param format like YYYY-MM-DD_HH-mm
 	docker-compose exec web test -f "/app-backups/$(BACKUP_DATE)/Config.tar.gz"
