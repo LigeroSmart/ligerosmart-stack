@@ -43,11 +43,11 @@ rm: stop ## stop and remove services
 set-permissions: ## fix files permission on /opt/otrs
 	docker-compose exec web otrs.SetPermissions.pl --web-group=www-data
 
-migrations-init: ## run migrations first time
+database-migrations-init: ## run migrations first time
 	otrs.Console.pl Maint::Database::Migration::TableCreate
 	otrs.Console.pl Maint::Database::Migration::Apply
 
-migrations-check: ## check database version
+database-migrations-check: ## check database version
 	otrs.Console.pl Maint::Database::Migration::Check
 
 upgrade-core: ## download new code version
