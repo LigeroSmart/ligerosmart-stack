@@ -8,7 +8,7 @@ services:
       - ./app:/opt/otrs
     restart: always
     environment:
-      CODE_BRANCH: ${CODE_BRANCH:-"rel-6_1"}
+      CODE_BRANCH: ${CODE_BRANCH:-rel-6_1}
       APP_FQDN: localhost.localdomain
       APP_DatabaseType: mysql
       APP_DatabaseHost: database
