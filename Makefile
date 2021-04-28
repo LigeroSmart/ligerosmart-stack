@@ -98,3 +98,4 @@ daemon-restart: daemon-stop daemon-start ## restart Daemon
 
 clean: stop ## clean all containers, networks and volumes
 	   docker-compose down -v 
+	   rm -rf ./app/
