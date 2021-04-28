@@ -21,7 +21,7 @@ dev: ## run services in development mode
 
 up: ## run the services and show logs
 	docker-compose pull
-	docker-compose up 
+	docker-compose up -d
 
 run: ## run stack
 	docker-compose run 
