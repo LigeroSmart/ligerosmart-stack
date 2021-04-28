@@ -78,13 +78,19 @@ elasticsearch-portalfaq-reindex: ## force reindex Portal FAQ
 elasticsearch-portalservice-reindex: ## force reindex Portal Service 
 	docker-compose exec -u otrs web otrs.Console.pl Maint::Ligero::Elasticsearch::PortalServiceIndexRebuild --DefaultLanguage
 
-elasticsearch-all-reindex: elasticsearch-ticket-reindex elasticsearch-portalfaq-reindex elasticsearch-portalservice-reindex ## Rebuild all on elasticsearch
+elasticsearch-all-reindex: elasticsearch-delete-indices elasticsearch-ticket-reindex elasticsearch-portalfaq-reindex elasticsearch-portalservice-reindex ## Rebuild all on elasticsearch
 
 elasticsearch-sysctl-config: ## configure server to run elasticsearch service
 	sysctl -w vm.max_map_count=262144
 	echo 'sysctl -w vm.max_map_count=262144' > /etc/sysctl.d/elasticsearch.conf
 
-	
+elasticsearch-show-indices: ## show elasticsearch indices
+	docker-compose exec -u otrs web curl http://elasticsearch:9200/_cat/indices
+
+elasticsearch-delete-indices: ## show elasticsearch indices
+	docker-compose exec -u otrs web curl -XDELETE http://elasticsearch:9200/_all
+
+
 tail-web-log: ## show web service log
 	docker-compose logs -f web 
 
