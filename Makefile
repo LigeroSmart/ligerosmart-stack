@@ -44,7 +44,7 @@ set-permissions: ## fix files permission on /opt/otrs
 	docker-compose exec web otrs.SetPermissions.pl --web-group=www-data
 
 upgrade-containers: ## download new image version and reconstruct services
-	docker-compose pull && docker-compose down && docker-compose up -d
+	docker-compose pull && docker-compose up -d
 
 backup: ## run backup.pl on the web service
 	docker-compose exec web /opt/otrs/scripts/backup.pl -d /app-backups
