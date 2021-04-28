@@ -43,8 +43,8 @@ rm: stop ## stop and remove services
 set-permissions: ## fix files permission on /opt/otrs
 	docker-compose exec web otrs.SetPermissions.pl --web-group=www-data
 
-upgrade: ## download new image version and reconstruct services
-	docker-compose pull && docker-compose stop && docker-compose create && docker-compose start
+upgrade-containers: ## download new image version and reconstruct services
+	docker-compose pull && docker-compose down && docker-compose up -d
 
 backup: ## run backup.pl on the web service
 	docker-compose exec web /opt/otrs/scripts/backup.pl -d /app-backups
