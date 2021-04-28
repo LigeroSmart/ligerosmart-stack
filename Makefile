@@ -70,7 +70,7 @@ elasticsearch-mapping: ## run MappingInstall command
 	docker-compose exec -u otrs web otrs.Console.pl Admin::Ligero::Elasticsearch::MappingInstall --DefaultLanguage
 
 elasticsearch-ticket-reindex: ## force reindex tickets 
-	docker-compose exec -u otrs web otrs.Console.pl Maint::Ligero::Elasticsearch::TicketIndexRebuild --micro-sleep 50000
+	docker-compose exec -u otrs web otrs.Console.pl Maint::Ligero::Elasticsearch::TicketIndexRebuild --micro-sleep 5000
 
 elasticsearch-portalfaq-reindex: ## force reindex Portal FAQ 
 	docker-compose exec -u otrs web otrs.Console.pl Maint::Ligero::Elasticsearch::PortalFaqIndexRebuild --DefaultLanguage
