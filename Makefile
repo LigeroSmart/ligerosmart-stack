@@ -49,7 +49,7 @@ upgrade-containers: ## download new image version and reconstruct services
 backup: ## run backup.pl on the web service
 	docker-compose exec web /opt/otrs/scripts/backup.pl -d /app-backups
 
-backup-list: ## run backup.pl on the web service
+backup-list: ## list all saved backups
 	docker-compose exec web ls -1 /app-backups
 
 restore: ## restore backup from BACKUP_DATE param format like YYYY-MM-DD_HH-mm
