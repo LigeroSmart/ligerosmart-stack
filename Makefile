@@ -103,7 +103,7 @@ elasticsearch-sysctl-config: ## configure server to run elasticsearch service
 elasticsearch-show-indices: ## show elasticsearch indices
 	docker-compose exec -u otrs web curl http://elasticsearch:9200/_cat/indices
 
-elasticsearch-delete-indices: ## show elasticsearch indices
+elasticsearch-delete-indices: ## delete elasticsearch indices
 	docker-compose exec -u otrs web curl -XDELETE http://elasticsearch:9200/_all
 
 	
