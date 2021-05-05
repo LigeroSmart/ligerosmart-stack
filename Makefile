@@ -11,10 +11,6 @@ help: ## This help.
 
 # DOCKER TASKS
 
-# Build the container
-create: ## construct the services
-	docker-compose create 
-
 dev: ## run services in development mode
 	# TODO: Load Ligero in "DEV Mode".
 	#docker-compose run 
@@ -23,11 +19,12 @@ up: ## run the services and show logs
 	docker-compose pull
 	docker-compose up -d
 
-run: ## run stack
-	docker-compose run 
-
 start: ## start all services 
 	docker-compose start 
+
+
+status: ## check services 
+	docker-compose ps 
 
 console: ## open console app
 	docker-compose exec -u otrs web bash
@@ -42,9 +39,23 @@ rm: stop ## stop and remove services
 
 set-permissions: ## fix files permission on /opt/otrs
 	docker-compose exec web otrs.SetPermissions.pl --web-group=www-data
+database-migrations: ## run migrations
+	otrs.Console.pl Maint::Database::Migration::Apply
+database-migrations-init: ## run migrations at first time (migrations table creation)
+	otrs.Console.pl Maint::Database::Migration::TableCreate
+	otrs.Console.pl Maint::Database::Migration::Apply
+
+database-migrations-check: ## database version check
+	otrs.Console.pl Maint::Database::Migration::Check
+
+upgrade-core: ## download new code version
+	docker-compose exec web git pull origin ${version}
+	otrs.Console.pl Maint::Database::Migration::Apply
 
 upgrade-containers: ## download new image version and reconstruct services
 	docker-compose pull && docker-compose up -d
+
+upgrade-all: upgrade-core upgrade-containers ## download new image version and reconstruct services
 
 backup: ## run backup.pl on the web service
 	docker-compose exec web /opt/otrs/scripts/backup.pl -d /app-backups
@@ -52,9 +63,8 @@ backup: ## run backup.pl on the web service
 backup-list: ## list all saved backups
 	docker-compose exec web ls -1 /app-backups
 
-restore: ## restore backup from BACKUP_DATE param format like YYYY-MM-DD_HH-mm
-	docker-compose exec web test -f "/app-backups/$(BACKUP_DATE)/Config.tar.gz"
-	docker-compose exec web /opt/otrs/scripts/restore.pl -d /opt/otrs/ -b /app-backups/$(BACKUP_DATE)
+restore: ## restore backup from app-backups directory
+	docker-compose exec web ligero-restorebackup-dialog
 
 cron-enable-backup: ## activate daily backup with crontab
 	docker-compose exec web test -f /opt/otrs/var/cron/app-backups.dist
@@ -81,7 +91,7 @@ elasticsearch-portalfaq-reindex: ## force reindex Portal FAQ
 elasticsearch-portalservice-reindex: ## force reindex Portal Service 
 	docker-compose exec -u otrs web otrs.Console.pl Maint::Ligero::Elasticsearch::PortalServiceIndexRebuild --DefaultLanguage
 
-elasticsearch-all-reindex: elasticsearch-indices-delete elasticsearch-ticket-reindex elasticsearch-portalfaq-reindex elasticsearch-portalservice-reindex ## Rebuild all on elasticsearch
+elasticsearch-all-reindex: elasticsearch-indices-delete elasticsearch-mapping elasticsearch-ticket-reindex elasticsearch-portalfaq-reindex elasticsearch-portalservice-reindex ## Rebuild all on elasticsearch
 
 elasticsearch-sysctl-config: ## configure server to run elasticsearch service
 	sysctl -w vm.max_map_count=262144
@@ -90,10 +100,10 @@ elasticsearch-sysctl-config: ## configure server to run elasticsearch service
 elasticsearch-indices: ## show elasticsearch indices
 	docker-compose exec -u otrs web curl http://elasticsearch:9200/_cat/indices
 
-elasticsearch-indices-delete: ## show elasticsearch indices
+elasticsearch-indices-delete: ## delete elasticsearch indices
 	docker-compose exec -u otrs web curl -XDELETE http://elasticsearch:9200/_all
 
-
+	
 tail-web-log: ## show web service log
 	docker-compose logs -f web 
 
@@ -107,4 +117,3 @@ daemon-restart: daemon-stop daemon-start ## restart Daemon
 
 clean: stop ## clean all containers, networks and volumes
 	   docker-compose down -v 
-	   rm -rf ./app/
