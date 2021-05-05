@@ -30,7 +30,7 @@ start: ## start all services
 	docker-compose start 
 
 console: ## open console app
-	docker-compose exec web bash
+	docker-compose exec -u otrs web bash
 
 stop: ## stop all services 
 	docker-compose stop 
