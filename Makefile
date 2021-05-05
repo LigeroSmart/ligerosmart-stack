@@ -22,6 +22,10 @@ up: ## run the services and show logs
 start: ## start all services 
 	docker-compose start 
 
+
+status: ## check services 
+	docker-compose ps 
+
 console: ## open console app
 	docker-compose exec -u otrs web bash
 
