@@ -63,9 +63,8 @@ backup: ## run backup.pl on the web service
 backup-list: ## list all saved backups
 	docker-compose exec web ls -1 /app-backups
 
-restore: ## restore backup from BACKUP_DATE param format like YYYY-MM-DD_HH-mm
-	docker-compose exec web test -f "/app-backups/$(BACKUP_DATE)/Config.tar.gz"
-	docker-compose exec web /opt/otrs/scripts/restore.pl -d /opt/otrs/ -b /app-backups/$(BACKUP_DATE)
+restore: ## restore backup from app-backups directory
+	docker-compose exec web ligero-restorebackup-dialog
 
 cron-enable-backup: ## activate daily backup with crontab
 	docker-compose exec web test -f /opt/otrs/var/cron/app-backups.dist
