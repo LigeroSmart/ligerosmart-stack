@@ -11,10 +11,6 @@ help: ## This help.
 
 # DOCKER TASKS
 
-# Build the container
-create: ## construct the services
-	docker-compose create 
-
 dev: ## run services in development mode
 	# TODO: Load Ligero in "DEV Mode".
 	#docker-compose run 
@@ -22,9 +18,6 @@ dev: ## run services in development mode
 up: ## run the services and show logs
 	docker-compose pull
 	docker-compose up -d
-
-run: ## run stack
-	docker-compose run 
 
 start: ## start all services 
 	docker-compose start 
