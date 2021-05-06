@@ -68,16 +68,16 @@ restore: ## restore backup from app-backups directory
 
 cron-enable-backup: ## activate daily backup with crontab
 	docker-compose exec web test -f /opt/otrs/var/cron/app-backups.dist
-	docker-compose exec web Cron.sh stop otrs
+	docker-compose exec web -u otrs Cron.sh stop otrs
 	docker-compose exec web mv var/cron/app-backups.dist var/cron/app-backups
-	docker-compose exec web Cron.sh start otrs
+	docker-compose exec web -u otrs Cron.sh start otrs
 	docker-compose exec web chown otrs /app-backups
 
 cron-disable-backup: ## deactivate daily backup with crontab
 	docker-compose exec web test -f /opt/otrs/var/cron/app-backups
-	docker-compose exec web Cron.sh stop otrs
+	docker-compose exec web -u otrs Cron.sh stop otrs
 	docker-compose exec web mv var/cron/app-backups var/cron/app-backups.dist
-	docker-compose exec web Cron.sh start otrs
+	docker-compose exec web -u otrs Cron.sh start otrs
 
 elasticsearch-mapping: ## run MappingInstall command
 	docker-compose exec -u otrs web otrs.Console.pl Admin::Ligero::Elasticsearch::MappingInstall --DefaultLanguage
