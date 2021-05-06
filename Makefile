@@ -9,6 +9,13 @@ help: ## This help.
 .DEFAULT_GOAL := help
 
 
+# APP settiings
+
+# last released version
+version=6.1.3
+
+
+
 # DOCKER TASKS
 
 dev: ## run services in development mode
