@@ -51,6 +51,7 @@ database-migrations-check: ## database version check
 upgrade-core: ## download new code version
 	docker-compose exec web git pull origin ${version}
 	otrs.Console.pl Maint::Database::Migration::Apply
+	docker-compose exec web supervisorctl restart webserver
 
 upgrade-containers: ## download new image version and reconstruct services
 	docker-compose pull && docker-compose up -d
