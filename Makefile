@@ -47,17 +47,17 @@ rm: stop ## stop and remove services
 set-permissions: ## fix files permission on /opt/otrs
 	docker-compose exec web otrs.SetPermissions.pl --web-group=www-data
 database-migrations: ## run migrations
-	otrs.Console.pl Maint::Database::Migration::Apply
+	docker-compose exec web -u otrs otrs.Console.pl Maint::Database::Migration::Apply
 database-migrations-init: ## run migrations at first time (migrations table creation)
-	otrs.Console.pl Maint::Database::Migration::TableCreate
-	otrs.Console.pl Maint::Database::Migration::Apply
+	docker-compose exec web -u otrs otrs.Console.pl Maint::Database::Migration::TableCreate
+	docker-compose exec web -u otrs otrs.Console.pl Maint::Database::Migration::Apply
 
 database-migrations-check: ## database version check
-	otrs.Console.pl Maint::Database::Migration::Check
+	docker-compose exec web -u otrs otrs.Console.pl Maint::Database::Migration::Check
 
 upgrade-core: ## download new code version
 	docker-compose exec web git pull origin ${version}
-	otrs.Console.pl Maint::Database::Migration::Apply
+	docker-compose exec web -u otrs otrs.Console.pl Maint::Database::Migration::Apply
 	docker-compose exec web supervisorctl restart webserver
 
 upgrade-containers: ## download new image version and reconstruct services
