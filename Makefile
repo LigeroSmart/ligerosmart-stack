@@ -12,7 +12,7 @@ help: ## This help.
 # APP settiings
 
 # last released version
-version=6.1.3
+version=6.1.4
 
 
 
