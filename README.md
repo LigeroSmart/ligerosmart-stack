@@ -37,4 +37,10 @@ Informações de acesso do Grafana:
 * Usuário: admin
 * Senha: ligero
 
+Informações de acesso do Elasticsearch:
+* Endereço: http://localhost/elasticsearch
+* Usuário: admin
+* Senha: ligero
+
+
 Caso queira acessar remotamente, troque o endereço localhost pelo IP do seu servidor
