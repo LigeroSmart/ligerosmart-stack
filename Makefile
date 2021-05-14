@@ -9,12 +9,6 @@ help: ## This help.
 .DEFAULT_GOAL := help
 
 
-# APP settiings
-
-# last released version
-version=6.1.5
-
-
 
 # DOCKER TASKS
 
@@ -55,8 +49,8 @@ database-migrations-init: ## run migrations at first time (migrations table crea
 database-migrations-check: ## database version check
 	docker-compose exec -u otrs web otrs.Console.pl Maint::Database::Migration::Check
 
-upgrade-core: ## download new code version
-	docker-compose exec web git pull origin ${version}
+upgrade-core: ## download new code version from https://github.com/LigeroSmart/ligerosmart
+	docker-compose exec web git pull origin $(shell curl --silent "https://api.github.com/repos/LigeroSmart/ligerosmart/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
 	docker-compose exec -u otrs web otrs.Console.pl Maint::Database::Migration::Apply
 	docker-compose exec web supervisorctl restart webserver
 
