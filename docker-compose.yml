@@ -1,6 +1,38 @@
 version: '2'
 
 services:
+
+  ingress:
+    image: traefik:v1.7
+    command: 
+      # - --api
+      - --docker
+      - --docker.watch=true 
+      - --docker.exposedbydefault=false
+      - --debug=false
+      - --logLevel=WARN
+      ## HTTP only (remove line above if HTTPS is active)
+      - --entryPoints=Name:http Address::80
+      ## HTTPS
+      #- --defaultentrypoints=https,http
+      #- --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
+      #- --entryPoints=Name:https Address::443 TLS
+      ## letsencrypt
+      #- --acme
+      #- --acme.email=${ACME_EMAIL}
+      #- --acme.storage=/ssl/acme.json
+      #- --acme.entryPoint=https
+      #- --acme.onHostRule=true
+      #- --acme.httpchallenge.entrypoint=http
+      # other ssl
+      #- --entryPoints=Name:https Address::443 TLS:/ssl/www.mycert.com.crt,/ssl/www.mycert.com.key
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ssl:/ssl/
+    ports:
+      - 80:80
+      - 443:443 
+      
   web:
     image: ligero/ligerosmart:dev
     volumes:
@@ -30,7 +62,16 @@ services:
       - "8008:80"
       #- "2202:22"
       - "13603:13603"
-
+    labels:
+      - traefik.enable=true
+      - traefik.port=80
+      - traefik.default-path.frontend.rule=PathPrefix:/
+      - traefik.otrs-path.frontend.rule=PathPrefix:/otrs
+      - traefik.user-path.frontend.rule=Path:/atendente;ReplacePath:/otrs/index.pl
+      # set root path to customer 
+      #- traefik.customer-path.frontend.rule=Path:/;ReplacePath:/otrs/customer.pl
+      - traefik.protocol=http
+      
   database:
     image: mysql:5.7
     volumes:
@@ -61,7 +102,13 @@ services:
       - cluster.name=otrs-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-
+    labels:
+      - traefik.enable=true
+      - traefik.port=9200
+      - traefik.es-path.frontend.rule=PathPrefixStrip:/elasticsearch
+      - traefik.es-path.frontend.auth.basic.users=admin:$$apr1$$7084whge$$kQU3F5SrBABKENsd8BFk21 # ligero
+      - traefik.protocol=http
+      
   grafana:
     image: ligero/grafana
     restart: always
@@ -69,20 +116,32 @@ services:
       - grafana-data:/var/lib/grafana
     ports:
       - 3000:3000
-
+    labels:
+      - traefik.enable=true
+      - traefik.port=3000
+      - traefik.grafana-path.frontend.rule=PathPrefixStrip:/grafana
+      - traefik.protocol=http
+      
   mail:
     image: jeanberu/mailcatcher
+    command: mailcatcher -f --ip=0.0.0.0 --smtp-port=25 --http-port=80 --http-path=/mailcatcher
+    restart: always
     environment:
-     - SMTP_PORT=25
-     - HTTP_PORT=1080
      - TZ=America/Sao_Paulo
     ports:
       - 1080:1080
-
+    labels:
+      - traefik.enable=true
+      - traefik.port=3000
+      - traefik.grafana-path.frontend.rule=PathPrefixStrip:/mailcatcher
+      - traefik.protocol=http
+      
 volumes:
   mysql-data:
     driver: local
   elasticsearch-data:
     driver: local
   grafana-data:
+    driver: local
+  ssl:
     driver: local
