@@ -6,7 +6,7 @@ Configuração básica para instanciar serviços do LigeroSmart
 
 O comando abaixo serve tanto para fazer a instalação dos pré-requisitos quanto para subir uma stack do LigeroSmart
 ```
-  curl https://get.ligerosmart.com | sh
+curl https://get.ligerosmart.com | sh
 ```
 
 # Pré-requisitos
