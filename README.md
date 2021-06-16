@@ -2,6 +2,13 @@
 
 Configuração básica para instanciar serviços do LigeroSmart
 
+# Script de instalação
+
+O comando abaixo serve tanto para fazer a instalação dos pré-requisitos quanto para subir uma stack do LigeroSmart
+```
+curl https://get.ligerosmart.com | BRANCH=dev sh
+```
+
 # Pré-requisitos
 
 * arquivos deste repositório
