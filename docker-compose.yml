@@ -88,7 +88,7 @@ services:
       - --bind-address=0.0.0.0
 
   elasticsearch:
-    image: ligero/elasticsearch:6.5.1
+    image: ligero/elasticsearch:7.13.2
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     restart: always
@@ -98,8 +98,11 @@ services:
         hard: -1
     environment:
       - cluster.name=ligerosmart-cluster
-      - bootstrap.memory_lock=true
+      - bootstrap.memory_lock=true      
+      - discovery.type=single-node
+      - discovery.seed_hosts=["127.0.0.1", "[::1]"]
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - path.repo=/snapshots
     labels:
       - traefik.enable=true
       - traefik.port=9200
