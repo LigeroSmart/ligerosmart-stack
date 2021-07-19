@@ -69,7 +69,7 @@ services:
       - traefik.protocol=http
 
   database:
-    image: mysql:5.7
+    image: mariadb:10.6
     volumes:
       - mysql-data:/var/lib/mysql
     restart: always
