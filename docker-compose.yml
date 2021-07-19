@@ -73,7 +73,7 @@ services:
       - traefik.protocol=http
       
   cache:
-    image: redis
+    image: redis:6-buster
     restart: always
     ulimits:
       memlock:
