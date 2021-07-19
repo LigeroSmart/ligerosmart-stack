@@ -35,7 +35,7 @@ services:
       - 443:443 
 
   web:
-    image: ligero/ligerosmart:6.1-nginx
+    image: ligero/ligerosmart:dev
     volumes:
       - ligerosmart-core:/opt/otrs
       - ligerosmart-custom:/opt/otrs/Custom
