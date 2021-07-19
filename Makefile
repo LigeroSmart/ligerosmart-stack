@@ -9,7 +9,6 @@ help: ## This help.
 .DEFAULT_GOAL := help
 
 
-
 # DOCKER TASKS
 
 dev: ## run services in development mode
@@ -41,18 +40,17 @@ rm: stop ## stop and remove services
 set-permissions: ## fix files permission on /opt/otrs
 	docker-compose exec web otrs.SetPermissions.pl --web-group=www-data
 database-migrations: ## run migrations
-	docker-compose exec -u otrs web otrs.Console.pl Maint::Database::Migration::Apply
+	otrs.Console.pl Maint::Database::Migration::Apply
 database-migrations-init: ## run migrations at first time (migrations table creation)
-	docker-compose exec -u otrs web otrs.Console.pl Maint::Database::Migration::TableCreate
-	docker-compose exec -u otrs web otrs.Console.pl Maint::Database::Migration::Apply
+	otrs.Console.pl Maint::Database::Migration::TableCreate
+	otrs.Console.pl Maint::Database::Migration::Apply
 
 database-migrations-check: ## database version check
-	docker-compose exec -u otrs web otrs.Console.pl Maint::Database::Migration::Check
+	otrs.Console.pl Maint::Database::Migration::Check
 
-upgrade-core: ## download new code version from https://github.com/LigeroSmart/ligerosmart
-	docker-compose exec web git pull origin $(shell curl --silent "https://api.github.com/repos/LigeroSmart/ligerosmart/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
-	docker-compose exec -u otrs web otrs.Console.pl Maint::Database::Migration::Apply
-	docker-compose exec web supervisorctl restart webserver
+upgrade-core: ## download new code version
+	docker-compose exec web git pull origin ${version}
+	otrs.Console.pl Maint::Database::Migration::Apply
 
 upgrade-containers: ## download new image version and reconstruct services
 	docker-compose pull && docker-compose up -d
@@ -70,16 +68,16 @@ restore: ## restore backup from app-backups directory
 
 cron-enable-backup: ## activate daily backup with crontab
 	docker-compose exec web test -f /opt/otrs/var/cron/app-backups.dist
-	docker-compose exec -u otrs web Cron.sh stop otrs
+	docker-compose exec web Cron.sh stop otrs
 	docker-compose exec web mv var/cron/app-backups.dist var/cron/app-backups
-	docker-compose exec -u otrs web Cron.sh start otrs
+	docker-compose exec web Cron.sh start otrs
 	docker-compose exec web chown otrs /app-backups
 
 cron-disable-backup: ## deactivate daily backup with crontab
 	docker-compose exec web test -f /opt/otrs/var/cron/app-backups
-	docker-compose exec -u otrs web Cron.sh stop otrs
+	docker-compose exec web Cron.sh stop otrs
 	docker-compose exec web mv var/cron/app-backups var/cron/app-backups.dist
-	docker-compose exec -u otrs web Cron.sh start otrs
+	docker-compose exec web Cron.sh start otrs
 
 elasticsearch-mapping: ## run MappingInstall command
 	docker-compose exec -u otrs web otrs.Console.pl Admin::Ligero::Elasticsearch::MappingInstall --DefaultLanguage
@@ -117,6 +115,5 @@ daemon-start: ## start Daemon
 
 daemon-restart: daemon-stop daemon-start ## restart Daemon
 
-clean: ## clean all containers, networks and volumes
-	@echo -n "Erase all containers and volumes? [y/N] " && read ans && [ $${ans:-N} = y ]
-	docker-compose down -v --remove-orphans
+clean: stop ## clean all containers, networks and volumes
+	   docker-compose down -v 
