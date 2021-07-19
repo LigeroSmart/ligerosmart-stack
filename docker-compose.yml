@@ -37,9 +37,7 @@ services:
   web:
     image: ligero/ligerosmart:dev
     volumes:
-      - ligerosmart-core:/opt/otrs
-      - ligerosmart-custom:/opt/otrs/Custom
-      - ligerosmart-article:/opt/otrs/var/article
+      - ./app:/opt/otrs
       - ./app-backups:/app-backups
     restart: always
     environment:
