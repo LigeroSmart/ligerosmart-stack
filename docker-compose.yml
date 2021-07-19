@@ -72,6 +72,16 @@ services:
       #- traefik.customer-path.frontend.rule=Path:/;ReplacePath:/otrs/customer.pl
       - traefik.protocol=http
       
+  cache:
+    image: redis
+    restart: always
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - cache:/data
+      
   database:
     image: mysql:5.7
     volumes:
