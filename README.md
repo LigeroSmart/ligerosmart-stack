@@ -51,3 +51,9 @@ Informações de acesso do Elasticsearch:
 
 
 Caso queira acessar remotamente, troque o endereço localhost pelo IP do seu servidor
+
+# Documentação
+
+Veja em https://docs.ligerosmart.org
+
+
