@@ -1,4 +1,20 @@
-version: '2.4'
+# LigeroSmart with Docker Swarm mode
+#
+# Ref.: https://docs.docker.com/engine/swarm/
+#
+# Enviroment variables description
+#
+# PROJECT_NAME 
+#    Name for default stack used on elasticsearch index preffix
+# 
+# WEBSERVER_FQDN
+#    DNS resolved name for application access. It's is used on FQDN system reference, 
+#    to internal URL format, also to SSL keys auto creation if Letsencript support is enabled
+# 
+# TZ
+#    server time zone
+
+version: '3.5'
 
 services:
 
@@ -29,7 +45,6 @@ services:
       #- --entryPoints=Name:https Address::443 TLS:/ssl/www.mycert.com.crt,/ssl/www.mycert.com.key
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ssl:/ssl/
     ports:
       - 80:80
       - 443:443 
@@ -37,109 +52,162 @@ services:
   web:
     image: ligero/ligerosmart:6.1-nginx
     volumes:
-      - ligerosmart-core:/opt/otrs
-      - ligerosmart-custom:/opt/otrs/Custom
-      - ligerosmart-article:/opt/otrs/var/article
-      - ./app-backups:/app-backups
-    restart: always
+      - ligero-data:/opt/otrs
+      - app-backups:/app-backups
     environment:
-      APP_FQDN: ${WEBSERVER_FQDN:-localhost.localdomain}
-      APP_DatabaseType: mysql
-      APP_DatabaseHost: database
-      APP_Database: ligerosmart
-      APP_DatabaseUser: ligerosmart
-      APP_DatabasePw: ligerosmart
-      APP_NodeID: 1
-      APP_LigeroSmart_Node: elasticsearch
-      APP_CustomerID: ligerosmart
-      APP_DefaultLanguage: pt_BR
-      TZ: America/Sao_Paulo
-      START_WEBSERVER: 1
-      START_SCHEDULER: 1
-      #START_SSHD: 0
-      #SSH_PASSWORD: 
-      #DEBUG_MODE: 0
-      #ROOT_PASSWORD: ligero
-    labels:
-      - traefik.enable=true
-      - traefik.port=80
-      - traefik.default-path.frontend.rule=PathPrefix:/
-      - traefik.otrs-path.frontend.rule=PathPrefix:/otrs
-      - traefik.user-path.frontend.rule=Path:/atendente;ReplacePath:/otrs/index.pl
-      # set root path to customer 
-      #- traefik.customer-path.frontend.rule=Path:/;ReplacePath:/otrs/customer.pl
-      - traefik.protocol=http
-      
-  # Redis cache
-  # Configuration reference on https://docs.ligerosmart.com
-  #cache:
-  #  image: redis:6-buster
-  #  restart: always
-    
-  database:
-    image: mysql:5.7
+      - APP_DatabaseType=mysql
+      - APP_DatabaseHost=database
+      - APP_Database=ligerosmart
+      - APP_DatabaseUser=ligerosmart
+      - APP_DatabasePw=Hc7b23BG53Ug
+      - APP_NodeID={{.Task.Slot}}
+      - APP_LigeroSmart_Node=elasticsearch
+      - APP_CustomerID=${PROJECT_NAME}
+      - APP_FQDN=${WEBSERVER_FQDN}
+      - APP_DefaultLanguage=pt_BR
+      - TZ=${TZ:-America/Sao_Paulo}
+      - START_SCHEDULER=0
+      - ROOT_PASSWORD=${ROOT_PASSWORD:-ligero}
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.webserver == true
+      update_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          cpus: '1'
+          memory: 3G
+      labels:
+        - traefik.enable=true
+        - traefik.port=80
+        - traefik.default.frontend.rule=Host:${WEBSERVER_FQDN}
+        #- traefik.user.frontend.rule=Host:${WEBSERVER_FQDN};Path:/atendente;ReplacePath:/otrs/index.pl
+        #- traefik.customer.frontend.rule=Host:${WEBSERVER_FQDN};Path:/;ReplacePath:/otrs/customer.pl
+        - traefik.protocol=http
+        - traefik.frontend.headers.customResponseHeaders=access-control-allow-origin:*
+
+  scheduler:
+    image: ligero/ligerosmart:6.1-scheduler
     volumes:
-      - mysql-data:/var/lib/mysql
-    restart: always
+      - ligero-data:/opt/otrs
+      - app-backups:/app-backups
     environment:
-      MYSQL_ROOT_PASSWORD: ligerosmart
-      MYSQL_DATABASE: ligerosmart
-      MYSQL_USER: ligerosmart
-      MYSQL_PASSWORD: ligerosmart
+      - APP_DatabaseType=mysql
+      - APP_DatabaseHost=database
+      - APP_Database=ligerosmart
+      - APP_DatabaseUser=ligerosmart
+      - APP_DatabasePw=Hc7b23BG53Ug
+      - APP_NodeID={{.Task.Slot}}
+      - APP_LigeroSmart_Node=elasticsearch
+      - APP_CustomerID=${PROJECT_NAME}
+      - APP_FQDN=${WEBSERVER_FQDN}
+      - TZ=${TZ:-America/Sao_Paulo}
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.labels.webserver == true
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+
+  cache:
+    image: redis:6-buster
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.labels.cache == true
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+      
+  database:
+    image: mariadb:10.3
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=Q6w8kEkO5Jbr2
+      - MYSQL_DATABASE=ligerosmart
+      - MYSQL_USER=ligerosmart
+      - MYSQL_PASSWORD=Hc7b23BG53Ug
+      - TZ=${TZ:-America/Sao_Paulo}
     command:
       - --max-allowed-packet=64M
-      - --innodb-buffer-pool-size=1G
       - --innodb-log-file-size=256M
+      - --innodb-buffer-pool-size=1G
+      - --log-output=TABLE
+      - --slow-query-log=1
       - --character-set-server=utf8
       - --bind-address=0.0.0.0
+      - --innodb-use-native-aio=0
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.database == true
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
 
+  grafana:
+    image: dockerhub.complemento.net.br/grafana
+    environment:
+      - GF_SERVER_ROOT_URL=/grafana/
+      - TZ=${TZ:-America/Sao_Paulo}
+    volumes:
+      - grafana-data:/var/lib/grafana
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.grafana == true
+      labels:
+      - traefik.enable=true
+      - traefik.port=3000
+      - traefik.frontend.rule=Host:${WEBSERVER_FQDN};PathPrefixStrip:/grafana
+      - traefik.protocol=http
+      - traefik.frontend.headers.customResponseHeaders=access-control-allow-origin:*
+    
   elasticsearch:
     image: ligero/elasticsearch:6.5.1
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
-    restart: always
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
     environment:
-      - cluster.name=ligerosmart-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    labels:
-      - traefik.enable=true
-      - traefik.port=9200
-      - traefik.es-path.frontend.rule=PathPrefixStrip:/elasticsearch
-      - traefik.es-path.frontend.auth.basic.users=admin:$$apr1$$af4muqpv$$02aLvgQLPrZxo41BqKD6H1
-      - traefik.protocol=http
+      - cluster.name=ligero-cluster
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+      - TZ=${TZ:-America/Sao_Paulo}
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.elasticsearch == true
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
 
-  grafana:
-    image: ligero/grafana
-    restart: always
-    volumes:
-      - grafana-data:/var/lib/grafana
-    environment:
-      - GF_SERVER_ROOT_URL=/grafana/
-      - GF_AUTH_BASIC_ENABLED=false # avoid elasticsearch auth
-    labels:
-      - traefik.enable=true
-      - traefik.port=3000
-      - traefik.grafana-path.frontend.rule=PathPrefixStrip:/grafana
-      - traefik.protocol=http
-        
 volumes:
-  ligerosmart-core:
+  ligero-data:
     driver: local
-  ligerosmart-custom:
+  app-backups:
     driver: local
-  ligerosmart-article:
-    driver: local
-  mysql-data:
-    driver: local
-  elasticsearch-data:
+  mariadb-data:
     driver: local
   grafana-data:
     driver: local
-  ssl:
+  elasticsearch-data:
     driver: local
-
