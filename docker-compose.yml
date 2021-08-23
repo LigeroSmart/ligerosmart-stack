@@ -69,7 +69,13 @@ services:
       # set root path to customer 
       #- traefik.customer-path.frontend.rule=Path:/;ReplacePath:/otrs/customer.pl
       - traefik.protocol=http
-
+      
+  # Redis cache
+  # Configuration reference on https://docs.ligerosmart.com
+  #cache:
+  #  image: redis:6-buster
+  #  restart: always
+    
   database:
     image: mysql:5.7
     volumes:
