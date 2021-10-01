@@ -13,6 +13,18 @@
 # 
 # TZ
 #    server time zone
+#
+# Docker Swarm configuration
+# 
+# In the nodes of your Docker Swarm you must define the labels for 
+# the respective nodes where the services will run. The list of labels are:
+#
+# webserver == true
+# cache == true
+# database == true
+# elasticsearch == true
+# grafana == true
+#
 
 version: '3.5'
 
