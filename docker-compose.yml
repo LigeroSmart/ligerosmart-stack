@@ -32,7 +32,7 @@ services:
   database:
     image: postgres:9.5
     volumes:
-      - postgres-data:/var/lib/postgresql
+      - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
     environment:
       POSTGRES_DB: ligerosmart
