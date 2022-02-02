@@ -1,4 +1,4 @@
-# LigeroSmart Stack
+# LigeroSmart Stack - Ambiente de desenvolvimento
 
 Configuração básica para instanciar serviços do LigeroSmart
 
