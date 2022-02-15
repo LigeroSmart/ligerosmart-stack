@@ -120,7 +120,7 @@ services:
       - traefik.protocol=http
       
   grafana:
-    image: ligero/grafana
+    image: ligero/grafana:8
     restart: always
     volumes:
       - grafana-data:/var/lib/grafana
