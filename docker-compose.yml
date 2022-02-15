@@ -54,7 +54,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
 
   grafana:
-    image: ligero/grafana
+    image: ligero/grafana:8
     restart: always
     volumes:
       - grafana-data:/var/lib/grafana
