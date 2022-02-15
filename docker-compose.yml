@@ -174,7 +174,7 @@ services:
           memory: 2G
 
   grafana:
-    image: dockerhub.complemento.net.br/grafana
+    image: ligero/grafana:8
     environment:
       - GF_SERVER_ROOT_URL=/grafana/
       - TZ=${TZ:-America/Sao_Paulo}
