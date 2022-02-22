@@ -133,7 +133,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.port=3000
-      - traefik.grafana-path.frontend.rule=PathPrefixStrip:/mailcatcher
+      - traefik.mailcatcher-path.frontend.rule=PathPrefixStrip:/mailcatcher
       - traefik.protocol=http
       
 volumes:
