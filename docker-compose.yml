@@ -110,7 +110,7 @@ services:
       - traefik.enable=true
       - traefik.port=9200
       - traefik.es-path.frontend.rule=PathPrefixStrip:/elasticsearch
-      - traefik.es-path.frontend.auth.basic.users=admin:$$apr1$$23sci5lu$$qvGVhGKvwixPoEvoNc4ry1
+      - traefik.es-path.frontend.auth.basic.users=admin:$$apr1$$a2ecql8h$$TOd.gTrHOrD825ytXTEnL1
       - traefik.protocol=http
 
   grafana:
