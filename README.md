@@ -46,8 +46,7 @@ Informações de acesso do Grafana:
 
 Informações de acesso do Elasticsearch:
 * Endereço: http://localhost/elasticsearch
-* Usuário: admin
-* Senha: ligero (Por segurança troque o hash de senha no docker-compose.yml para uma senha mais segura. Você pode usar o htpasswd)
+* Para acessar é preciso [editar o docker-compose.yml](https://github.com/LigeroSmart/ligerosmart-stack/blob/29cba5cc221b4dbbbf9ce7d0cdeb97985b496d77/docker-compose.yml#L113) e incluir o usuário e hash de senha no formato do htpasswd. Você pode gerar um com o https://hostingcanada.org/htpasswd-generator/
 
 
 Caso queira acessar remotamente, troque o endereço localhost pelo IP do seu servidor
