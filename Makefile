@@ -50,7 +50,7 @@ database-migrations-check: ## database version check
 	docker-compose exec -u otrs web otrs.Console.pl Maint::Database::Migration::Check
 
 upgrade-core: ## download new code version from https://github.com/LigeroSmart/ligerosmart
-	docker-compose exec web git pull origin $(shell curl --silent "https://api.github.com/repos/LigeroSmart/ligerosmart/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
+	docker-compose exec -u otrs web git pull --strategy-option=theirs --allow-unrelated-histories --no-edit origin $(shell curl --silent "https://api.github.com/repos/LigeroSmart/ligerosmart/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
 	docker-compose exec -u otrs web otrs.Console.pl Maint::Database::Migration::Apply
 	docker-compose exec web supervisorctl restart webserver
 
