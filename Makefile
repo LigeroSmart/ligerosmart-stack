@@ -52,6 +52,7 @@ upgrade-core: ## download new code version from https://github.com/LigeroSmart/l
 	docker-compose exec web git pull origin $(shell curl --silent "https://api.github.com/repos/LigeroSmart/ligerosmart/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
 	docker-compose exec -u otrs web otrs.Console.pl Maint::Database::Migration::Apply
 	docker-compose exec web supervisorctl restart webserver
+	
 upgrade-containers: ## download new image version and reconstruct services
 	docker-compose pull && docker-compose up -d
 
