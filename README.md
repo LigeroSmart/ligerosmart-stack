@@ -12,8 +12,6 @@ curl https://get.ligerosmart.com | sh
 # Pré-requisitos
 
 * arquivos deste repositório
-* docker instalado
-* docker-compose instalado
 
 # Comandos para iniciar uma instância nova
 ```
