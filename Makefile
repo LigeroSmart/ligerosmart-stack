@@ -51,7 +51,7 @@ database-migrations-check: ## database version check
 
 upgrade-core: ## download new code version from https://github.com/LigeroSmart/ligerosmart
 	docker-compose exec -u otrs web ligero-upgrade-code
-	docker-compose exec web supervisorctl restart webserver
+	docker-compose restart web
 
 upgrade-containers: ## download new image version and reconstruct services
 	docker-compose pull && docker-compose up -d
