@@ -50,14 +50,13 @@ database-migrations-check: ## database version check
 	docker-compose exec -u otrs web otrs.Console.pl Maint::Database::Migration::Check
 
 upgrade-core: ## download new code version from https://github.com/LigeroSmart/ligerosmart
-	docker-compose exec -u otrs web git pull --strategy-option=theirs --allow-unrelated-histories --no-edit origin $(shell curl --silent "https://api.github.com/repos/LigeroSmart/ligerosmart/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
-	docker-compose exec -u otrs web otrs.Console.pl Maint::Database::Migration::Apply
+	docker-compose exec -u otrs web ligero-upgrade-code
 	docker-compose exec web supervisorctl restart webserver
 
 upgrade-containers: ## download new image version and reconstruct services
 	docker-compose pull && docker-compose up -d
 
-upgrade-all: upgrade-core upgrade-containers ## download new image version and reconstruct services
+upgrade-all: upgrade-containers upgrade-core ## download new image version and reconstruct services
 
 backup: ## run backup.pl on the web service
 	docker-compose exec web /opt/otrs/scripts/backup.pl -d /app-backups
