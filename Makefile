@@ -117,4 +117,5 @@ daemon-start: ## start Daemon
 daemon-restart: daemon-stop daemon-start ## restart Daemon
 
 clean: stop ## clean all containers, networks and volumes
-	   docker-compose down -v 
+	@echo -n "Erase all containers and volumes? [y/N] " && read ans && [ $${ans:-N} = y ]
+	docker-compose down -v 
