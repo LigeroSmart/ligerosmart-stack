@@ -94,7 +94,7 @@ services:
       - --bind-address=0.0.0.0
 
   elasticsearch:
-    image: ligero/elasticsearch:6.5.1
+    image: ligero/elasticsearch:6.8.23
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     restart: always
