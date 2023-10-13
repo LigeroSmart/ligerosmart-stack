@@ -33,7 +33,7 @@ O ambiente será configurado e funcionará na porta 8008
 Na primeira execução o sistema é configurado para você. Aguarde até que todas as configurações sejam aplicadas.
 A tela de login será carregada automaticamente ao final da configuração.
 
-* Endereço: http://localhost/ligerosmart/index.pl
+* Endereço: http://localhost/otrs/
 * Usuário: root@localhost
 * Senha: ligero
 
