@@ -38,12 +38,12 @@ A tela de login será carregada automaticamente ao final da configuração.
 * Senha: ligero
 
 Informações de acesso do Grafana:
-* Endereço: http://localhost/grafana
+* Endereço: http://localhost/grafana/
 * Usuário: admin
 * Senha: ligero
 
 Informações de acesso do Elasticsearch:
-* Endereço: http://localhost/elasticsearch
+* Endereço: http://localhost/elasticsearch/
 * Para acessar é preciso [editar o docker-compose.yml](https://github.com/LigeroSmart/ligerosmart-stack/blob/29cba5cc221b4dbbbf9ce7d0cdeb97985b496d77/docker-compose.yml#L113) e incluir o usuário e hash de senha no formato do htpasswd. Você pode gerar um com o https://hostingcanada.org/htpasswd-generator/
 
 
