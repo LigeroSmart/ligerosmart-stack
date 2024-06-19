@@ -90,6 +90,8 @@ services:
       - --max-allowed-packet=64M
       - --innodb-buffer-pool-size=1G
       - --innodb-log-file-size=256M
+      - --key_buffer_size=1M
+      - --join_buffer_size=4M
       - --character-set-server=utf8
       - --bind-address=0.0.0.0
 
