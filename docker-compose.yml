@@ -4,6 +4,7 @@ services:
 
   ingress:
     image: traefik:v1.7
+    platform: linux/amd64
     restart: always
     command: 
       # - --api
@@ -36,6 +37,7 @@ services:
 
   web:
     image: ligero/ligerosmart:6.1-nginx
+    platform: linux/amd64
     volumes:
       - ligerosmart-core:/opt/otrs
       - ligerosmart-custom:/opt/otrs/Custom
@@ -78,6 +80,7 @@ services:
     
   database:
     image: mariadb:10.3
+    platform: linux/amd64
     volumes:
       - mysql-data:/var/lib/mysql
     restart: always
@@ -97,6 +100,7 @@ services:
 
   elasticsearch:
     image: ligero/elasticsearch:6.8.23
+    platform: linux/amd64
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     restart: always
@@ -117,6 +121,7 @@ services:
 
   grafana:
     image: ligero/grafana:8
+    platform: linux/amd64
     restart: always
     volumes:
       - grafana-data:/var/lib/grafana
