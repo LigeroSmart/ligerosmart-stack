@@ -4,6 +4,7 @@ services:
 
   ingress:
     image: traefik:v1.7
+    platform: linux/amd64
     restart: always
     command: 
       # - --api
@@ -36,6 +37,7 @@ services:
       
   web:
     image: ligero/ligerosmart:dev
+    platform: linux/amd64
     volumes:
       - ./app-backups:/app-backups
       - ./app:/opt/otrs
@@ -74,7 +76,8 @@ services:
       - traefik.protocol=http
       
   database:
-    image: mysql:5.7
+    image: mariadb:10.3
+    platform: linux/amd64
     volumes:
       - mysql-data:/var/lib/mysql
     restart: always
@@ -91,7 +94,8 @@ services:
       - --bind-address=0.0.0.0
 
   elasticsearch:
-    image: ligero/elasticsearch:6.5.1
+    image: ligero/elasticsearch:6.8.23
+    platform: linux/amd64
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     restart: always
@@ -112,6 +116,7 @@ services:
       
   grafana:
     image: ligero/grafana:8
+    platform: linux/amd64
     restart: always
     volumes:
       - grafana-data:/var/lib/grafana
@@ -125,6 +130,7 @@ services:
       
   mail:
     image: jeanberu/mailcatcher
+    platform: linux/amd64
     command: mailcatcher -f --ip=0.0.0.0 --smtp-port=25 --http-port=80 --http-path=/mailcatcher
     restart: always
     environment:
