@@ -64,7 +64,7 @@ services:
     ports:
       - "8008:80" # acesso direto ao web server
       #- "2202:22"
-      - "13603:13603" # perllanguageserver - inicia o servidor de linguagem (Language Server) para Perl, permitindo integração com editores como VSCode para autocompletar, linting e debug em projetos como LigeroSmart.
+      - "13603:13603" # perllanguageserver - servidor de linguagem (Language Server) para Perl, permitindo integração com editores como VSCode para autocompletar, linting e debug em projetos como LigeroSmart.
     labels:
       - traefik.enable=true
       - traefik.port=80
